@@ -13,12 +13,7 @@ from utils import helpers
 from forms import RegistrationForm
 
 from . import app
-
-# TODO: Move it to config
-from wsd.models import Events, Speakers, Presentations, Event, Partners
-
-app_root = os.path.abspath(os.path.dirname(__name__))
-pres_dir = os.path.join(app_root, 'pres/')
+from .models import Events, Speakers, Presentations, Event, Partners
 
 
 def process_register(data, list_id):
