@@ -424,7 +424,7 @@
 
     {
         "id": "spb-2013",
-        "date": "08-06-2013",
+        "date": "08-06-2014",
         "timezone": "Europe/Moscow",
         "place": {
             "city": "Санкт-Петербург"
@@ -432,33 +432,33 @@
         "registration": {
             "openDate": "10-05-2013",
             "openTime": "21:00",
-            "closeDate": "16-05-2013",
+            "closeDate": "16-05-2014",
             "closeTime": "12:00",
             "mailchimpListId": "a63c57772a",
             "fields": [
                 {
                     "name": "firstName",
+                    "type": "textField",
                     "label": "Имя"
                 },
                 {
                     "name": "lastName",
+                    "type": "textField",
                     "label": "Фамилия"
                 },
                 {
-                    "name": "email",
-                    "label": "Адрес электронной почты",
-                    "description": "Обещаем — спама не будет"
-                },
-                {
                     "name": "company",
+                    "type": "textarea",
                     "label": "Место работы или учёбы"
                 },
                 {
                     "name": "position",
+                    "type": "textField",
                     "label": "Должность"
                 },
                 {
                     "name": "twitter",
+                    "type": "textField",
                     "label": "Ник в твиттере"
                 }
             ]

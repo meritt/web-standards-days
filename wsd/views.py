@@ -1,19 +1,16 @@
 # coding=utf-8
 
 import os
-import json
-from datetime import datetime, timedelta
+from datetime import datetime
 
 import pytz
-from flask import render_template, redirect, flash
+from flask import render_template, redirect
 from jinja2 import TemplateNotFound
 from mailsnake.exceptions import *
 
-from utils import helpers
-from forms import RegistrationForm
-
 from . import app
 from .models import Events, Speakers, Presentations, Event, Partners
+from .forms import RegistrationForm
 
 
 def process_register(data, list_id):
@@ -94,13 +91,18 @@ def event(event_id):
 
     data = event.getData(speakers, presentations)
 
+    if event.showRegistration:
+        form = RegistrationForm(event['registration']['fields'])
+    else:
+        form = False
+
     return render_template('event.html',
                            event=event,
                            schedule=data.get('schedule'),
                            speakers=data.get('speakers'),
                            speakers_dict=data.get('speakers_dict'),
                            partners=partners,
-                           registration_form=None,
+                           registration_form=form,
     )
 
 
