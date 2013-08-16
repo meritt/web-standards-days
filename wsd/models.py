@@ -93,6 +93,7 @@ class Event(object):
                                                                   self['registration']['closeTime'],
                                                                   self['timezone'])
 
+    @property
     def showRegistration(self):
         return 'registration' in self \
             and 'force_close' not in self['registration'] \

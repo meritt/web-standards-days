@@ -100,7 +100,6 @@ def event(event_id):
                            speakers=data.get('speakers'),
                            speakers_dict=data.get('speakers_dict'),
                            partners=partners,
-                           show_registration=event.showRegistration(),
                            registration_form=None,
     )
 
