@@ -12,3 +12,4 @@ app.jinja_env.filters['year'] = jinjaFilters.year
 app.jinja_env.filters['filesize'] = jinjaFilters.filesize
 
 from .views import *
+from .context_processors import *
