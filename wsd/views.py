@@ -9,7 +9,7 @@ from flask import render_template, redirect, flash
 from jinja2 import TemplateNotFound
 from mailsnake.exceptions import *
 
-from utils import helpers, jinjaFilters
+from utils import helpers
 from forms import RegistrationForm
 
 from . import app
@@ -54,12 +54,6 @@ def process_register(data, list_id):
             'success': False,
             'message': u'Возникла непредвиденная ошибка',
         }
-
-app.jinja_env.filters['day'] = jinjaFilters.day
-app.jinja_env.filters['month'] = jinjaFilters.month
-app.jinja_env.filters['year'] = jinjaFilters.year
-app.jinja_env.filters['filesize'] = jinjaFilters.filesize
-
 
 @app.context_processor
 def utility_processor():
