@@ -457,7 +457,7 @@
                     "label": "Должность"
                 },
                 {
-                    "name": "twitter",
+                    "name": "twitter_name",
                     "type": "textField",
                     "label": "Ник в твиттере"
                 }

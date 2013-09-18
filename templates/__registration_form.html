@@ -14,7 +14,7 @@
 
 {% for field in fields %}
     <div>
-        <label for="regform_{{ field.name }}">{{ field.label }}</label>
+        <label for="{{ field.name }}">{{ field.label }}</label>
         {{ registration_form[field.name] }}
         {% if field.description %}
             <span class="field_description">{{ field.description }}</span>
