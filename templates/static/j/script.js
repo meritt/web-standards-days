@@ -107,4 +107,65 @@ $(function(){
 		return false;
 	});
 
+	// registration
+	$.fn.registration = function(params) {
+		var defauts = {
+			errorText: ""
+		}
+		params = $.extend({}, defauts, params);
+
+		this.submitForm = function(e) {
+			var $this = $(this);
+			this.$messageBox = $this.find('.formMessage');
+			this.$submit = $this.find('.formSubmit');
+
+			e.preventDefault();
+			$.ajax({
+				type: 'POST',
+				url: $this.attr('action'),
+				data: $this.serialize(),
+				dataType: 'json',
+				beforeSend: $.proxy(beforeSend, this)
+			})
+			.done($.proxy(successHandler, this))
+			.fail($.proxy(errorHandler, this))
+			.always($.proxy(completeHandler, this))
+		};
+
+		var beforeSend = function() {
+			this.$messageBox
+				.text("")
+				.hide()
+				.removeClass('error');
+			this.$submit
+				.attr('disabled', 'disabled');
+		};
+
+		var successHandler = function(result, status, xhr) {
+			this.$messageBox
+				.text(result.data.message)
+				.slideDown();
+		};
+
+		var errorHandler = function(xhr, status, message) {
+			this.$messageBox
+				.text(params.errorText)
+				.addClass('error')
+				.slideDown();
+		};
+
+		var completeHandler = function() {
+			this.$submit.removeAttr('disabled');
+		};
+
+		return $(this).each($.proxy(function(index, elem) {
+			$form = $(elem);
+
+			$form.on('submit', this.submitForm);
+		}, this));
+	};
+
+	$('.js-registrationForm').registration({
+		errorText: 'Произoшла ошибка. Попробуйте отправить форму позже'
+	});
 });

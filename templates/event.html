@@ -137,10 +137,11 @@
     {% if event.registration.custom %}
         {{ event.registration.custom|safe() }}
     {% else %}
-        <form action="" method="POST">
+        <form action="./registration/" class="js-registrationForm" method="POST">
+            <div class="formMessage"></div>
         {{ registration_form.hidden_tag() }}
         {% include "__registration_form.html" %}
-        <input type="submit" value="Зарегистрироваться">
+        <input type="submit" class="formSubmit" value="Зарегистрироваться">
         </form>
     {% endif %}
 

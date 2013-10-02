@@ -106,6 +106,17 @@ def event(event_id):
     )
 
 
+@app.route('/events/<event_id>/registration/', methods=['POST',])
+def registration(event_id):
+    events = Events('events')
+    event = Event(events.get(event_id))
+    if app.debug is True:
+        from time import sleep
+        sleep(2)
+
+    return render_template('result.html')
+
+
 @app.route('/<staticpage>/')
 def staticpage(staticpage):
     try:
