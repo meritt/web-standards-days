@@ -14,12 +14,16 @@
     <link rel="stylesheet" href="{{ get_static('s/ie.css') }}"><![endif]-->
     <!--[if IE]>
     <script src="{{ get_static('j/html5.js') }}"></script><![endif]-->
+    {% if config.DEBUG %}
+    <script src="{{ get_static('j/jquery.js') }}"></script>
+    {% else %}
     <script src="http://yandex.st/jquery/1.8.1/jquery.min.js"></script>
-    <script src="http://api-maps.yandex.ru/2.0/?load=package.standard&amp;lang=ru-RU"></script>
+    {% endif %}
     <script src="{{ get_static('j/script.js') }}"></script>
 </head>
 <body>
 <header id="header" role="banner">
+
     {% block banner %}
     <p><a href="/">Web Standards Days</a></p>
     {% endblock %}
