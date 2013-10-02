@@ -37,4 +37,4 @@ def RegistrationForm(fields):
     for field in fields:
         setattr(RegistrationFormClass, field['name'], generateField(field))
 
-    return RegistrationFormClass()
+    return RegistrationFormClass
