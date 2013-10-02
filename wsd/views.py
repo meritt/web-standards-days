@@ -1,10 +1,11 @@
 # coding=utf-8
 
 import os
+import json
 from datetime import datetime
 
 import pytz
-from flask import render_template, redirect
+from flask import render_template, redirect, request
 from jinja2 import TemplateNotFound
 from mailsnake.exceptions import *
 
@@ -92,7 +93,7 @@ def event(event_id):
     data = event.getData(speakers, presentations)
 
     if event.showRegistration:
-        form = RegistrationForm(event['registration']['fields'])
+        form = RegistrationForm(event['registration']['fields'])()
     else:
         form = False
 
@@ -110,11 +111,31 @@ def event(event_id):
 def registration(event_id):
     events = Events('events')
     event = Event(events.get(event_id))
+    form = RegistrationForm(event['registration']['fields'])(request.form)
+    code = 200
+
     if app.debug is True:
         from time import sleep
         sleep(2)
+        
+    if form.validate():
+        result = {
+            'status': 'ok',
+            'data': {
+                'message': 'Ваша заявка принята',
+            }
+        }
+    else:
+        result = {
+            'status': 'error',
+            'data': {
+                'message': 'Проверьте поля формы',
+                'errors': form.errors,
+            }
+        }
+        code = 400
 
-    return render_template('result.html')
+    return json.dumps(result), code
 
 
 @app.route('/<staticpage>/')

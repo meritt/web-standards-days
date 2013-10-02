@@ -148,8 +148,10 @@ $(function(){
 		};
 
 		var errorHandler = function(xhr, status, message) {
+			var result = $.parseJSON(xhr.responseText);
+			
 			this.$messageBox
-				.text(params.errorText)
+				.text(result && result.data.message || params.errorText)
 				.addClass('error')
 				.slideDown();
 		};
