@@ -12,6 +12,14 @@
 
 {{ registration_form.prefix }}
 
+<div>
+    <label for="regform_email">{{ registration_form.email.label }}</label>
+    {{ registration_form.email|safe }}
+    {% for error in registration_form.errors[email] %}
+        <span class="error">{{ error }}</span>
+    {% endfor %}
+</div>
+
 {% for field in fields %}
     <div>
         <label for="{{ field.name }}">{{ field.label }}</label>
