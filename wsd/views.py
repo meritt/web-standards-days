@@ -9,7 +9,7 @@ from flask import render_template, redirect, request
 from jinja2 import TemplateNotFound
 from mailsnake.exceptions import *
 
-from . import app
+from . import app, mongo
 from .models import Events, Speakers, Presentations, Event, Partners
 from .forms import RegistrationForm
 
@@ -38,7 +38,8 @@ def process_register(data, list_id):
     except ListAlreadySubscribedException, e:
         return {
             'success': False,
-            'message': u'Адрес электронной почты {} уже зарегистрирован'.format(data['email']),
+            'message': u'Адрес электронной почты\
+             {} уже зарегистрирован'.format(data['email']),
         }
     except MailSnakeException, e:
         # TODO: Нужно логгировать ошибки
@@ -48,6 +49,7 @@ def process_register(data, list_id):
             'message': u'Возникла непредвиденная ошибка',
         }
 
+
 @app.route('/')
 def index():
     import random
@@ -56,15 +58,16 @@ def index():
     events = Events('events')
     speakers = Speakers('speakers')
     presentations = Presentations('presentations', speakers)
+    presentations = random.sample(presentations.filter('videoId'), 3)
 
     return render_template('index.html',
-                           history=groupby(
-                               events.order_by('-date'),
-                               key=lambda x: x['date'].year
-                           ),
-                           speakers=speakers.order_by('lastName'),
-                           presentations=random.sample(presentations.filter('videoId'), 3),
-                           today=datetime.now(pytz.utc)
+        history=groupby(
+            events.order_by('-date'),
+            key=lambda x: x['date'].year
+        ),
+        speakers=speakers.order_by('lastName'),
+        presentations=presentations,
+        today=datetime.now(pytz.utc)
     )
 
 
@@ -104,10 +107,10 @@ def event(event_id):
                            speakers_dict=data.get('speakers_dict'),
                            partners=partners,
                            registration_form=form,
-    )
+                           )
 
 
-@app.route('/events/<event_id>/registration/', methods=['POST',])
+@app.route('/events/<event_id>/registration/', methods=['POST', ])
 def registration(event_id):
     events = Events('events')
     event = Event(events.get(event_id))
@@ -117,14 +120,34 @@ def registration(event_id):
     if app.debug is True:
         from time import sleep
         sleep(2)
-        
+
     if form.validate():
-        result = {
-            'status': 'ok',
-            'data': {
-                'message': 'Ваша заявка принята',
+        form_data = dict(request.form)
+        del form_data['csrf_token']
+
+        for k in form_data.keys():
+            form_data[k] = form_data[k][0] if len(form_data[k]) == 1 else form_data[k]
+
+        form_data['event_id'] = event_id
+        form_data['added'] = datetime.now()
+
+        try:
+            mongo.db.registration.insert(form_data)
+        except:
+            result = {
+                'status': 'error',
+                'data': {
+                    'message': 'Произошла ошибка при сохранении. Попробуйте повторить позже'
+                }
             }
-        }
+            code = 500
+        else:
+            result = {
+                'status': 'ok',
+                'data': {
+                    'message': 'Ваша заявка принята',
+                }
+            }
     else:
         result = {
             'status': 'error',
@@ -142,5 +165,5 @@ def registration(event_id):
 def staticpage(staticpage):
     try:
         return render_template('staticpages/%s.html' % staticpage)
-    except TemplateNotFound, e:
+    except TemplateNotFound:
         return render_template('page-not-found.html'), 404
