@@ -57,7 +57,7 @@ class Events(JSONData):
                 event['registration_form'] = None
 
     @staticmethod
-    def parsRegistrationOpen():
+    def parseRegistrationOpen():
         pass
 
     @staticmethod
